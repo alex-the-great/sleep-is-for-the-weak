@@ -17,7 +17,11 @@ void setup (){
   nimbus.attach( 6 );
   //168 is down on the ground
   //70-80 is inclined upwards
-  nimbus.write(168);
+  nimbus.write( 168 );
+  delay( 300 );
+  nimbus.write( 75 );
+  delay( 300 );
+  nimbus.write( 168 );
   /*for ( magicAngle = -91; magicAngle < -31; magicAngle += 1 ){
     nimbus.write( magicAngle );
     delay( 15 );
