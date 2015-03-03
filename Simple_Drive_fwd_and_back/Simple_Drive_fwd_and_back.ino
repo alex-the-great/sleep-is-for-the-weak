@@ -20,14 +20,14 @@
 
 //       byte PWM_val = 127;
 
-//const int enable_1 = A1;
-//const int enable_2 = A2;
-const int motorPin_1_array[2] = {10, 11};
+//const int enable_1 = 10;
+//const int enable_2 = 2;
+const int motorPin_1_array[3] = {11, A0, 10};
 //left motor 10 11
 //left line sensor A4
 //right motor 3 5 
 //right line sensor A3
-const int motorPin_2_array[2] = {3, 5};
+const int motorPin_2_array[3] = {5, 2, 3};
 const int line_sensor[2] = {A4, A3};
 //const int servoPin = ;
 
@@ -86,6 +86,7 @@ void loop () {
   
   driveForward( motorPin_1_array );
   driveForward( motorPin_2_array );
+ 
   delay( 3000 );
   driveStop( motorPin_1_array );
   driveStop( motorPin_2_array );
@@ -257,11 +258,13 @@ void getToWall() {
 void driveForward( const int motorPin_array[] ) {
   digitalWrite( motorPin_array[0], 1 );
   digitalWrite( motorPin_array[1], 0 );
+  analogWrite(motorPin_array[2],255);
 }
 
 void driveBackward( const int motorPin_array[] ) {
   digitalWrite( motorPin_array[0], 0 );
   digitalWrite( motorPin_array[1], 1 );
+  analogWrite(motorPin_array[2], 255);
 }
 
 void driveStop( const int motorPin_array[] ) {
