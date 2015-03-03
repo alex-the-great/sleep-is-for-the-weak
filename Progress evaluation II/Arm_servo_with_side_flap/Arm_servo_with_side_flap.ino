@@ -8,29 +8,30 @@
 
 #include <Servo.h>
 
-//int felix = A0;
 Servo nimbus;
-int magicAngle = 0;
+Servo tail;
 
 void setup (){
   
   nimbus.attach( 9 );
+  tail.attach( 10 );
+  
+  tail.write( );
+  delay( 300 );
+  tail.write( );
+  delay( 300 );
+  tail.write( );
+  delay( 10 );
+  
   //168 is down on the ground
   //70-80 is inclined upwards
+  
   nimbus.write( 168 );
   delay( 300 );
   nimbus.write( 75 );
   delay( 300 );
   nimbus.write( 168 );
-  /*for ( magicAngle = -91; magicAngle < -31; magicAngle += 1 ){
-    nimbus.write( magicAngle );
-    delay( 15 );
-  }
-  for ( magicAngle = -91; magicAngle >= -171; magicAngle -= 1 ){
-    nimbus.write( magicAngle );
-    delay( 15 );
-  }*/
-  //nimbus.write(0);
+
 }
 
 void loop (){

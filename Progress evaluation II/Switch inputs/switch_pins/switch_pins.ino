@@ -1,4 +1,4 @@
-const int switchPins[4] = {13,12,8,7};
+const int switchPins[4] = {A1,12,8,7};
 const int LEDPin = A2;
 int obstacle[][2] = {{0,0}, {0,0}, {0,0}, {0,0}, {0,0}, {0,0}};
 int key_readings[3];

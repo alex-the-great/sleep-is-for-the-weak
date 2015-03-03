@@ -8,7 +8,6 @@
 
 #include <Servo.h>
 
-//int felix = A0;
 Servo nimbus;
 int magicAngle = 0;
 
@@ -22,15 +21,7 @@ void setup (){
   nimbus.write( 75 );
   delay( 300 );
   nimbus.write( 168 );
-  /*for ( magicAngle = -91; magicAngle < -31; magicAngle += 1 ){
-    nimbus.write( magicAngle );
-    delay( 15 );
-  }
-  for ( magicAngle = -91; magicAngle >= -171; magicAngle -= 1 ){
-    nimbus.write( magicAngle );
-    delay( 15 );
-  }*/
-  //nimbus.write(0);
+
 }
 
 void loop (){
