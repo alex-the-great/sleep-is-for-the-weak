@@ -22,14 +22,14 @@
 
 //       byte PWM_val = 127;
 
-//const int enable_1 = A1;
-//const int enable_2 = A2;
-const int motorPin_1_array[2] = {11, 10};
+const int enable_1 = 10;
+const int enable_2 = 3;
+const int motorPin_1_array[2] = {11, 13};
 //left motor 10 11
 //left line sensor A4
 //right motor 3 5 
 //right line sensor A3
-const int motorPin_2_array[2] = {5, 3};
+const int motorPin_2_array[2] = {5, 2};
 const int line_sensor[2] = {A4, A3};
 //const int servoPin = ;
 
@@ -69,18 +69,18 @@ void setup () {
 }
 
 void loop () {
-  /*lineFollow();
-  Serial.print( "x: " );
+  lineFollow();
+  /**Serial.print( "x: " );
   Serial.println( myPos[0] );
   Serial.print( "y : " );
-  Serial.println( myPos[1] );*/
+  Serial.println( myPos[1] );**/
   
   int line_1_val = analogRead( line_sensor[0] );
   int line_2_val = analogRead( line_sensor[1] );
   
-  Serial.print( "LDR 1: " );
+  Serial.print( "IR 1: " );
   Serial.println( line_1_val );
-  Serial.print( "LDR 2: " );
+  Serial.print( "IR 2: " );
   Serial.println( line_2_val );
   
   delay( 300 );
@@ -176,12 +176,12 @@ void lineFollow() {
     driveForward( motorPin_2_array );
   } else if ( line_1_val < THRESHOLD && line_2_val > THRESHOLD ) {
     Serial.println( "Line sensor 2 is off " );
-    driveForward( motorPin_1_array );
-    driveStop( motorPin_2_array );
-  } else if ( line_1_val > THRESHOLD && line_2_val < THRESHOLD ) {
-    Serial.println( "Line sensor 1 is off " );
     driveForward( motorPin_2_array );
     driveStop( motorPin_1_array );
+  } else if ( line_1_val > THRESHOLD && line_2_val < THRESHOLD ) {
+    Serial.println( "Line sensor 1 is off " );
+    driveForward( motorPin_1_array );
+    driveStop( motorPin_2_array );
   } else {
     Serial.println( "the else" );
     driveForward( motorPin_1_array );
