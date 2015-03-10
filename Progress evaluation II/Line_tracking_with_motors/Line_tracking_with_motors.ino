@@ -23,8 +23,8 @@
 // int motor_2_state[3];
 
 const int motorPin_1_array[3] = {9, 8, 10};
-const int motorPin_2_array[3] = {3, 2, 6};
-const int line_sensor[2] = {A3, A4};
+const int motorPin_2_array[3] = {5, 4, 7};
+const int line_sensor[2] = {A5, A2};
 
 int myPos[2] = { 0, 0 }; // scope of the variable - entire file
 byte face = LEFT; //direction currently facing 
@@ -33,11 +33,11 @@ byte dir = LEFT; //direction travelling/to travel in
 void setup () {
   pinMode( motorPin_1_array[0], OUTPUT );
   pinMode( motorPin_1_array[1], OUTPUT );
-  pinMode( motorPin_1_array[2], OUTPUT );
+  //pinMode( motorPin_1_array[2], OUTPUT );
   
   pinMode( motorPin_2_array[0], OUTPUT );
   pinMode( motorPin_2_array[1], OUTPUT );
-  pinMode( motorPin_2_array[2], OUTPUT );
+  //pinMode( motorPin_2_array[2], OUTPUT );
   
   pinMode( line_sensor[0], INPUT );
   pinMode( line_sensor[1], INPUT );
