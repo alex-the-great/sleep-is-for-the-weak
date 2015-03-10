@@ -5,7 +5,6 @@
   EngSci 1T7
   
 */
-#include <Servo.h>
 
 #define UP 0
 #define RIGHT 1
@@ -19,8 +18,6 @@
 #define THRESHOLD 300
 #define SERVO_ANGLE 20
 
-//       byte PWM_val = 127;
-
 //const int enable_1 = 10;
 //const int enable_2 = 2;
 const int motorPin_1_array[3] = {11, A0, 10};
@@ -30,65 +27,52 @@ const int motorPin_1_array[3] = {11, A0, 10};
 //right line sensor A3
 const int motorPin_2_array[3] = {5, 2, 3};
 const int line_sensor[2] = {A4, A3};
-const int servoPin = 9;
-Servo nimbus;
-Servo tail;
+//const int servoPin = ;
 
 int myPos[2] = { 0, 0 }; // scope of the variable - entire file
 byte face = LEFT; //direction currently facing 
 byte dir = LEFT; //direction travelling/to travel in
+byte PWM_val = 127;
 
 void setup () {
-
   pinMode( motorPin_1_array[0], OUTPUT );
   pinMode( motorPin_1_array[1], OUTPUT );
-  //pinMode( motorPin_1_array[2], OUTPUT );
+  pinMode( motorPin_1_array[2], OUTPUT );
   pinMode( motorPin_2_array[0], OUTPUT );
   pinMode( motorPin_2_array[1], OUTPUT );
-  //pinMode( motorPin_2_array[2], OUTPUT );
+  pinMode( motorPin_2_array[2], OUTPUT );
   
   pinMode( line_sensor[0], INPUT );
   pinMode( line_sensor[1], INPUT );
-  
-  nimbus.attach( 9 );
-  tail.attach();
-  
 
   Serial.begin( 9600 );
-  
-  tail.write( );
-  delay( 300 );
-  tail.write( );
-  delay( 300 );
-  tail.write( );
-  delay( 10 );
-  driveBackward( motorPin_1_array, 255 );
-  driveBackward( motorPin_2_array, 255 );
-  
-  delay( 2000 );
-  
-  driveStop( motorPin_1_array );
-  driveStop( mtoroPin_2_array );
-  
-  nimbus.write( 168 );
-  delay( 300 );
-  nimbus.write( 75 );
-  delay( 300 );
-  nimbus.write( 168 );
-  
 
 }
 
 void loop () {
+  
+  driveForward( motorPin_1_array, PWM_val );
+  driveForward( motorPin_2_array, PWM_val );
+ 
+  delay( 3000 );
+  driveStop( motorPin_1_array );
+  driveStop( motorPin_2_array );
+  delay( 200 );
+  driveBackward( motorPin_1_array, PWM_val );
+  driveBackward( motorPin_2_array, PWM_val );
+  delay( 3000 );
+  driveStop( motorPin_1_array );
+  driveStop( motorPin_2_array );
+  
 }
 
 // Coordinates
 
 void logCoordinate() {
   if( dir == LEFT ) {
-    myPos[0] += 1;
-  } else if ( dir == RIGHT ) {
     myPos[0] -= 1;
+  } else if ( dir == RIGHT ) {
+    myPos[0] += 1;
   } else if ( dir == UP ) {
     myPos[1] += 1;
   } else if (dir == DOWN ) {
@@ -96,15 +80,7 @@ void logCoordinate() {
   }
 }
 
-
-/**int *getPath( int target[2] ) {
-  int *path[2];
-  path[0] = target[0] - myPos[0];
-  path[1] = target[1] - myPos[1];
-  return path;
-}**/
-
-int findTurnDir() {
+/*int findTurnDir() {
   int turn_dir;
   if ( ( dir == face ) || ( abs( dir - face ) == 2 ) ) {
     turn_dir = 2; // donut turn
@@ -119,15 +95,16 @@ int findTurnDir() {
 void linearMove() {
   int turnDir = findTurnDir();
   turn( turnDir );
-  driveForward( motorPin_1_array );
-  driveForward( motorPin_2_array );
-}
+  driveForward( motorPin_1_array, PWM_val );
+  driveForward( motorPin_2_array, PWM_val );
+}*/
 
 void checkIntersection( int LDR1_val, int LDR2_val ) {
   if( LDR1_val > THRESHOLD && LDR2_val > THRESHOLD ) {
     logCoordinate();
-    while( LDR1_val > THRESHOLD && LDR2_val > THRESHOLD ) {
-      continue;
+    while( LDR1_val > THRESHOLD || LDR2_val > THRESHOLD ) {
+        LDR1_val = analogRead( line_sensor[0] );
+        LDR2_val = analogRead( line_sensor[1] );
     }
   } 
 }
@@ -151,19 +128,19 @@ void lineFollow() {
   
   if ( line_1_val < THRESHOLD && line_2_val < THRESHOLD ) {
     Serial.println( "On white" );
-    driveForward( motorPin_1_array );
-    driveForward( motorPin_2_array );
+    driveForward( motorPin_1_array, PWM_val );
+    driveForward( motorPin_2_array, PWM_val );
   } else if ( line_1_val < THRESHOLD && line_2_val > THRESHOLD ) {
     Serial.println( "Line sensor 2 is off " );
-    driveForward( motorPin_1_array );
+    driveForward( motorPin_1_array, PWM_val );
     driveStop( motorPin_2_array );
   } else if ( line_1_val > THRESHOLD && line_2_val < THRESHOLD ) {
     Serial.println( "Line sensor 1 is off " );
-    driveForward( motorPin_2_array );
+    driveForward( motorPin_2_array, PWM_val );
     driveStop( motorPin_1_array );
   } else {
-    driveForward( motorPin_1_array );
-    driveForward( motorPin_2_array );
+    driveForward( motorPin_1_array, PWM_val );
+    driveForward( motorPin_2_array, PWM_val );
   }
   delay( 300 );
   //checkIntersection( LDR1_val, LDR2_val );
@@ -179,26 +156,26 @@ void lineFollow() {
   /*if( line_1_val > THRESHOLD && line_2_val < THRESHOLD ) {
     Serial.println( "LDR1 above" );
     if( dir == face ) {
-      driveForward( motorPin_2_array );
+      driveForward( motorPin_2_array, PWM_val );
       driveStop( motorPin_1_array );
     } else {
-      driveForward( motorPin_1_array );
+      driveForward( motorPin_1_array, PWM_val );
       driveStop( motorPin_2_array );
     }
   } else if ( LDR1_val < THRESHOLD && LDR2_val > THRESHOLD ) {
     Serial.println( "LDR2 above" );
     if( dir == face ) {
-      driveForward( motorPin_1_array );
+      driveForward( motorPin_1_array, PWM_val );
       driveStop( motorPin_2_array );
     } else {
-      driveForward( motorPin_2_array );
+      driveForward( motorPin_2_array, PWM_val );
       driveStop( motorPin_1_array );
     }
   } else {
     Serial.println( "Yer fine" );
     if ( dir == face ) {
-      driveForward( motorPin_1_array );
-      driveForward( motorPin_2_array );
+      driveForward( motorPin_1_array, PWM_val );
+      driveForward( motorPin_2_array, PWM_val );
     } else {
       driveBackward( motorPin_1_array );
       driveBackward( motorPin_2_array );
@@ -206,7 +183,7 @@ void lineFollow() {
   }*/
 }
 
-void getToWall() {
+/*void getToWall() {
   int targetWallPos;
   if( myPos[0] <= 0 ) {
     dir = LEFT;
@@ -230,24 +207,24 @@ void getToWall() {
   //I am there!
   driveStop( motorPin_1_array );
   driveStop( motorPin_2_array );
-}
+}*/
 
 // Motor control functions
 
-/*void driveSpeed( const int motorPin_array[], byte PWM_val ) {
+void driveSpeed( const int motorPin_array[], byte PWM_val ) {
   analogWrite( motorPin_array[2], PWM_val );
-}*/
-
-void driveForward( const int motorPin_array[] ) {
-  digitalWrite( motorPin_array[0], 1 );
-  digitalWrite( motorPin_array[1], 0 );
-  analogWrite(motorPin_array[2],255);
 }
 
-void driveBackward( const int motorPin_array[] ) {
+void driveForward( const int motorPin_array[], byte PWM_val ) {
+  digitalWrite( motorPin_array[0], 1 );
+  digitalWrite( motorPin_array[1], 0 );
+  analogWrite(motorPin_array[2], PWM_val);
+}
+
+void driveBackward( const int motorPin_array[], byte PWM_val ) {
   digitalWrite( motorPin_array[0], 0 );
   digitalWrite( motorPin_array[1], 1 );
-  analogWrite(motorPin_array[2], 255);
+  analogWrite(motorPin_array[2], PWM_val);
 }
 
 void driveStop( const int motorPin_array[] ) {
@@ -256,7 +233,9 @@ void driveStop( const int motorPin_array[] ) {
   digitalWrite( motorPin_array[1], 0 );
 }
 
-void changeFace( int dir ){
+/*void changeFace( int dir ){
+  // changes the global variable of face
+  //dir is either -1 or +1
   face = face + dir;
   if ( face < 0 )
   {
@@ -270,14 +249,14 @@ void turn( int turn_dir ) {
   //dir is 0 for motor1 cw, motor 2 ccw
   //dir is 1 for motor1 ccw, motor2 cw
   if( !turn_dir ) {
-    driveForward( motorPin_1_array );
+    driveForward( motorPin_1_array, PWM_val );
     driveBackward( motorPin_2_array );
     changeFace(1);
   } else if (turn_dir == 2) {
     return;
   } else { 
     driveBackward( motorPin_1_array );
-    driveForward( motorPin_2_array );
+    driveForward( motorPin_2_array, PWM_val );
     changeFace(-1);
   } 
   
@@ -286,11 +265,11 @@ void turn( int turn_dir ) {
   driveStop( motorPin_2_array );
   
 }
-
-void catchBall( int servoPin ) {
+*/
+/*void catchBall( int servoPin ) {
   
   
-}
+}*/
 
 /*
 

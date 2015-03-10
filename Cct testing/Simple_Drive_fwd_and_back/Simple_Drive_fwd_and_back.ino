@@ -19,16 +19,20 @@
 #define SERVO_ANGLE 20
 
 const int motorPin_1_array[3] = {8, 9, 10}; //right motor
-const int motorPin_2_array[3] = {2, 3, 6          }; //left motor
+int motor1_stat[3] = {0,0,0};
+
+const int motorPin_2_array[3] = {5, 4, 7}; //left motor
+int motor2_stat[3] = {0,0,0};
+
 const int line_sensor[2] = {A2, A3};
 
 void setup () {
   pinMode( motorPin_1_array[0], OUTPUT );
   pinMode( motorPin_1_array[1], OUTPUT );
-  pinMode( motorPin_1_array[2], OUTPUT );
+  //pinMode( motorPin_1_array[2], OUTPUT );
   pinMode( motorPin_2_array[0], OUTPUT );
   pinMode( motorPin_2_array[1], OUTPUT );
-  pinMode( motorPin_2_array[2], OUTPUT );
+  //pinMode( motorPin_2_array[2], OUTPUT );
   
   Serial.begin( 9600 );
 
