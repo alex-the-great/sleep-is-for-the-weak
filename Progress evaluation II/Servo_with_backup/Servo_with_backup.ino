@@ -1,4 +1,3 @@
-
 /*
 
   I solemnly swear I am up to no good
@@ -6,7 +5,7 @@
   EngSci 1T7
   
 */
-#include <QTRSensors.h>
+#include <Servo.h>
 
 #define UP 0
 #define RIGHT 1
@@ -17,92 +16,90 @@
 #define BOARDHEIGHT 9
 #define BOARDWIDTH 8
 
-#define THRESHOLD 500
+#define THRESHOLD 300
 #define SERVO_ANGLE 20
 
 //       byte PWM_val = 127;
 
-const int enable_1 = 10;
-const int enable_2 = 3;
-const int motorPin_1_array[2] = {11, A0};
+//const int enable_1 = 10;
+//const int enable_2 = 2;
+const int motorPin_1_array[3] = {11, 9, 10};
 //left motor 10 11
 //left line sensor A4
 //right motor 3 5 
 //right line sensor A3
-const int motorPin_2_array[2] = {5, 7};
+const int motorPin_2_array[3] = {2, 5, 3};
 const int line_sensor[2] = {A4, A3};
-//const int servoPin = ;
+//const int servoPin = 9;
+Servo nimbus;
+Servo tail;
 
 int myPos[2] = { 0, 0 }; // scope of the variable - entire file
 byte face = LEFT; //direction currently facing 
 byte dir = LEFT; //direction travelling/to travel in
 
 void setup () {
+
   pinMode( motorPin_1_array[0], OUTPUT );
   pinMode( motorPin_1_array[1], OUTPUT );
-  //pinMode( motorPin_1_array[2], OUTPUT );
+  pinMode( motorPin_1_array[2], OUTPUT );
+  
   pinMode( motorPin_2_array[0], OUTPUT );
   pinMode( motorPin_2_array[1], OUTPUT );
-  //pinMode( motorPin_2_array[2], OUTPUT );
+  pinMode( motorPin_2_array[2], OUTPUT );
   
-  //pinMode( line_sensor[0], INPUT );
-  //pinMode( line_sensor[1], INPUT );
-
+  pinMode( line_sensor[0], INPUT );
+  pinMode( line_sensor[1], INPUT );
+  
+  nimbus.attach( 9 );
+  tail.attach( A2 );
+  
   Serial.begin( 9600 );
-  /*
+  nimbus.write( 168 );
+  tail.write( 140 );
+  
+ /* tail.write( );
+  delay( 300 );
+  tail.write( );
+  delay( 300 );
+  tail.write( );
+  delay( 10 );*/
+  
   driveForward( motorPin_1_array );
   driveForward( motorPin_2_array );
-  delay( 3000 );
+  
+  delay( 1000 );
+  
   driveStop( motorPin_1_array );
   driveStop( motorPin_2_array );
-  delay( 200 );
+  tail.write( 70 );
+  delay( 1000 );
+  
   driveBackward( motorPin_1_array );
   driveBackward( motorPin_2_array );
-  delay( 3000 );
+  
+  delay( 1000 );
+  
   driveStop( motorPin_1_array );
   driveStop( motorPin_2_array );
+  //delay( 500 );
   
-  turn( 0 );
-  delay( TURN_TIME );*/
+  //Serial.print( "Servo" );
+  delay( 1000 );
+  nimbus.write( 45 );
+  delay( 2000 );
+  nimbus.write( 168 );
+  tail.write( 140 );
   
 
 }
 
 void loop () {
-  lineFollow();
-  /**Serial.print( "x: " );
-  Serial.println( myPos[0] );
-  Serial.print( "y : " );
-  Serial.println( myPos[1] );**/
-  
-  int line_1_val = analogRead( line_sensor[0] );
-  int line_2_val = analogRead( line_sensor[1] );
-  
-  Serial.print( "IR 1: " );
-  Serial.println( line_1_val );
-  Serial.print( "IR 2: " );
-  Serial.println( line_2_val );
-  
-  delay( 300 );
-  
-  /*driveForward( motorPin_1_array );
-  driveForward( motorPin_2_array );
-  delay( 3000 );
-  driveStop( motorPin_1_array );
-  driveStop( motorPin_2_array );
-  delay( 200 );
-  driveBackward( motorPin_1_array );
-  driveBackward( motorPin_2_array );
-  delay( 3000 );
-  driveStop( motorPin_1_array );
-  driveStop( motorPin_2_array );*/
-  
 }
 
 // Coordinates
 
 void logCoordinate() {
-  Serial.println( "Intersection" );
   if( dir == LEFT ) {
     myPos[0] += 1;
   } else if ( dir == RIGHT ) {
@@ -143,13 +140,10 @@ void linearMove() {
 
 void checkIntersection( int LDR1_val, int LDR2_val ) {
   if( LDR1_val > THRESHOLD && LDR2_val > THRESHOLD ) {
-    Serial.println( "Intersection" );
     logCoordinate();
     while( LDR1_val > THRESHOLD && LDR2_val > THRESHOLD ) {
-      Serial.println( "Stuck in the loop" );
       continue;
     }
-    Serial.println( "Coordinate logged" );
   } 
 }
 
@@ -168,7 +162,7 @@ void lineFollow() {
   
   Serial.print( "2: " );
   Serial.println( line_2_val );
-  //checkIntersection( line_sensor[0], line_sensor[1] );
+  checkIntersection( line_sensor[0], line_sensor[1] );
   
   if ( line_1_val < THRESHOLD && line_2_val < THRESHOLD ) {
     Serial.println( "On white" );
@@ -176,14 +170,13 @@ void lineFollow() {
     driveForward( motorPin_2_array );
   } else if ( line_1_val < THRESHOLD && line_2_val > THRESHOLD ) {
     Serial.println( "Line sensor 2 is off " );
-    driveForward( motorPin_2_array );
-    driveStop( motorPin_1_array );
-  } else if ( line_1_val > THRESHOLD && line_2_val < THRESHOLD ) {
-    Serial.println( "Line sensor 1 is off " );
     driveForward( motorPin_1_array );
     driveStop( motorPin_2_array );
+  } else if ( line_1_val > THRESHOLD && line_2_val < THRESHOLD ) {
+    Serial.println( "Line sensor 1 is off " );
+    driveForward( motorPin_2_array );
+    driveStop( motorPin_1_array );
   } else {
-    Serial.println( "the else" );
     driveForward( motorPin_1_array );
     driveForward( motorPin_2_array );
   }
@@ -263,11 +256,13 @@ void getToWall() {
 void driveForward( const int motorPin_array[] ) {
   digitalWrite( motorPin_array[0], 1 );
   digitalWrite( motorPin_array[1], 0 );
+  analogWrite(motorPin_array[2],255);
 }
 
 void driveBackward( const int motorPin_array[] ) {
   digitalWrite( motorPin_array[0], 0 );
   digitalWrite( motorPin_array[1], 1 );
+  analogWrite(motorPin_array[2], 255);
 }
 
 void driveStop( const int motorPin_array[] ) {

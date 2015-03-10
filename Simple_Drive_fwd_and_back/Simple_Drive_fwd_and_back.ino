@@ -5,6 +5,7 @@
   EngSci 1T7
   
 */
+#include <Servo.h>
 
 #define UP 0
 #define RIGHT 1
@@ -16,7 +17,7 @@
 #define BOARDWIDTH 8
 
 #define THRESHOLD 300
-#define SERVO_ANGLE 20;
+#define SERVO_ANGLE 20
 
 //       byte PWM_val = 127;
 
@@ -29,13 +30,16 @@ const int motorPin_1_array[3] = {11, A0, 10};
 //right line sensor A3
 const int motorPin_2_array[3] = {5, 2, 3};
 const int line_sensor[2] = {A4, A3};
-//const int servoPin = ;
+const int servoPin = 9;
+Servo nimbus;
+Servo tail;
 
 int myPos[2] = { 0, 0 }; // scope of the variable - entire file
 byte face = LEFT; //direction currently facing 
 byte dir = LEFT; //direction travelling/to travel in
 
 void setup () {
+
   pinMode( motorPin_1_array[0], OUTPUT );
   pinMode( motorPin_1_array[1], OUTPUT );
   //pinMode( motorPin_1_array[2], OUTPUT );
@@ -45,58 +49,37 @@ void setup () {
   
   pinMode( line_sensor[0], INPUT );
   pinMode( line_sensor[1], INPUT );
+  
+  nimbus.attach( 9 );
+  tail.attach();
+  
 
   Serial.begin( 9600 );
-  /*
-  driveForward( motorPin_1_array );
-  driveForward( motorPin_2_array );
-  delay( 3000 );
-  driveStop( motorPin_1_array );
-  driveStop( motorPin_2_array );
-  delay( 200 );
-  driveBackward( motorPin_1_array );
-  driveBackward( motorPin_2_array );
-  delay( 3000 );
-  driveStop( motorPin_1_array );
-  driveStop( motorPin_2_array );
   
-  turn( 0 );
-  delay( TURN_TIME );*/
+  tail.write( );
+  delay( 300 );
+  tail.write( );
+  delay( 300 );
+  tail.write( );
+  delay( 10 );
+  driveBackward( motorPin_1_array, 255 );
+  driveBackward( motorPin_2_array, 255 );
+  
+  delay( 2000 );
+  
+  driveStop( motorPin_1_array );
+  driveStop( mtoroPin_2_array );
+  
+  nimbus.write( 168 );
+  delay( 300 );
+  nimbus.write( 75 );
+  delay( 300 );
+  nimbus.write( 168 );
   
 
 }
 
 void loop () {
-  /*lineFollow();
-  Serial.print( "x: " );
-  Serial.println( myPos[0] );
-  Serial.print( "y : " );
-  Serial.println( myPos[1] );
-  
-  delay( 200 );*/
-  /**int LDR1_val = analogRead( LDRPin_1 );
-  int LDR2_val = analogRead( LDRPin_2 );
-  
-  Serial.print( "LDR 1: " );
-  Serial.println( LDR1_val );
-  Serial.print( "LDR 2: " );
-  Serial.println( LDR2_val );
-  
-  delay( 30 );**/
-  
-  driveForward( motorPin_1_array );
-  driveForward( motorPin_2_array );
- 
-  delay( 3000 );
-  driveStop( motorPin_1_array );
-  driveStop( motorPin_2_array );
-  delay( 200 );
-  driveBackward( motorPin_1_array );
-  driveBackward( motorPin_2_array );
-  delay( 3000 );
-  driveStop( motorPin_1_array );
-  driveStop( motorPin_2_array );
-  
 }
 
 // Coordinates
