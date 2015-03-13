@@ -16,8 +16,10 @@
 #define BOARDHEIGHT 9
 #define BOARDWIDTH 8
 
-#define THRESHOLD 650
+#define THRESHOLD 500
 #define SERVO_ANGLE 20
+
+#define PWM_INCREMENT 150
 
 // int motor_1_state[3];
 // int motor_2_state[3];
@@ -49,7 +51,7 @@ void setup () {
 }
 
 void loop () {
-  lineFollow(127);
+  lineFollow(90);
   /**Serial.print( "x: " );
   Serial.println( myPos[0] );
   Serial.print( "y : " );
@@ -63,7 +65,7 @@ void loop () {
   Serial.print( "IR 2: " );
   Serial.println( line_2_val );
   
-  //delay( 100 );
+  //delay( 300 );
   
 }
 
@@ -134,9 +136,10 @@ void lineFollow(byte PWM_val) {
     driveForward( motorPin_1_array, PWM_val );
     driveForward( motorPin_2_array, PWM_val );
     
-    while( line_1_val > THRESHOLD && line_2_val > THRESHOLD ) {
-      delay( 20 );
-    }
+    //while( line_1_val > THRESHOLD && line_2_val > THRESHOLD ) {
+    //  delay( 20 );
+    //}
+    
     
   } else if ( line_1_val < THRESHOLD && line_2_val < THRESHOLD ) {
     
@@ -148,22 +151,37 @@ void lineFollow(byte PWM_val) {
   } else if ( line_1_val < THRESHOLD && line_2_val > THRESHOLD ) {
     
     Serial.println( "Line sensor 2 is off " );
-    driveForward( motorPin_1_array, PWM_val );
-    //driveForward( motorPin_2_array, floor(PWM_val/2) );
-    driveStop( motorPin_2_array );
+    driveForward( motorPin_1_array, PWM_val + PWM_INCREMENT );
+    driveForward( motorPin_2_array, PWM_val );
+    /*
+    delay( 300 );
     
+    driveForward( motorPin_1_array, PWM_val );
+    
+    delay( 400 );
+    */
+    //driveStop( motorPin_2_array );
+    /*
     delay( 500 );
     
     driveForward( motorPin_2_array, PWM_val );
     
     delay( 500 );
-    
+    */
   } else if ( line_1_val > THRESHOLD && line_2_val < THRESHOLD ) {
     
     Serial.println( "Line sensor 1 is off " );
     
+    driveForward( motorPin_2_array, PWM_val + PWM_INCREMENT );
+    driveForward( motorPin_1_array, PWM_val );
+    /*
+    delay( 300 );
+    
     driveForward( motorPin_2_array, PWM_val );
-    //driveForward( motorPin_1_array, floor(PWM_val/2) );
+    
+    delay( 400 );
+    */
+    /*
     driveStop( motorPin_1_array);
     
     delay( 500 );
@@ -171,7 +189,7 @@ void lineFollow(byte PWM_val) {
     driveForward( motorPin_1_array, PWM_val );
     
     delay( 500 );
-    
+    */
   }
 }
 
