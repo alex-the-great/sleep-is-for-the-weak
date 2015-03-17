@@ -20,13 +20,17 @@
 #define SERVO_ANGLE 20
 
 #define PWM_INCREMENT 150
+#define LINE_TIME 300
 
 // int motor_1_state[3];
 // int motor_2_state[3];
 
-const int motorPin_1_array[3] = {9, 8, 10};
-const int motorPin_2_array[3] = {12, 11, 13 };
-const int line_sensor[2] = {A3, A4};
+const int motorPin_1_array[3] = { 7, 6, 3};
+const int motorPin_2_array[3] = {10, 11, 9};
+const int line_sensor[2] = {A3, A2};
+
+//left A2, 10 11 9
+
 
 
 int myPos[2] = { 0, 0 }; // scope of the variable - entire file
@@ -120,6 +124,9 @@ int AmIThereYet( int target ) {
 }
 
 void lineFollow(byte PWM_val) {
+  int time_to_black_1 = 0;
+  int time_to_black_2 = 0;
+  
   int line_1_val = analogRead( line_sensor[0] );
   int line_2_val = analogRead( line_sensor[1] );
 
@@ -151,8 +158,13 @@ void lineFollow(byte PWM_val) {
   } else if ( line_1_val < THRESHOLD && line_2_val > THRESHOLD ) {
     
     Serial.println( "Line sensor 2 is off " );
-    driveForward( motorPin_1_array, PWM_val + PWM_INCREMENT );
-    driveForward( motorPin_2_array, PWM_val );
+    time_to_black_2 = millis();
+    if( abs( time_to_black_2 - time_to_black_1 ) > LINE_TIME ) {
+    
+      driveForward( motorPin_1_array, PWM_val + PWM_INCREMENT );
+      driveForward( motorPin_2_array, PWM_val );
+    }
+  }
     /*
     delay( 300 );
     
@@ -172,8 +184,12 @@ void lineFollow(byte PWM_val) {
     
     Serial.println( "Line sensor 1 is off " );
     
-    driveForward( motorPin_2_array, PWM_val + PWM_INCREMENT );
-    driveForward( motorPin_1_array, PWM_val );
+    time_to_black_1 = millis();
+    
+    if( abs( time_to_black_2 - time_to_black_1 ) > LINE_TIME ) {
+      driveForward( motorPin_2_array, PWM_val + PWM_INCREMENT );
+      driveForward( motorPin_1_array, PWM_val );
+    }
     /*
     delay( 300 );
     
