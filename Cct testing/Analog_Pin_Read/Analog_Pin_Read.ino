@@ -12,8 +12,8 @@ void loop ()
   Serial.print( "A3: " );
   Serial.println( val[0] );
   
-  Serial.print( "A4: " );
-  Serial.println( val[1] );
+ // Serial.print( "A4: " );
+ // Serial.println( val[1] );
   
   delay( 500 );
 }

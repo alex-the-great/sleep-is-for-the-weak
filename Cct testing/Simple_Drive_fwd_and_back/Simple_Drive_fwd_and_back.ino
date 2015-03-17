@@ -18,10 +18,17 @@
 #define THRESHOLD 300
 #define SERVO_ANGLE 20
 
+<<<<<<< HEAD
 const int motorPin_1_array[3] = {7,6, 3}; //right motor
 int motor1_stat[3] = {0,0,0};
 
 const int motorPin_2_array[3] = {10,11,9}; //left motor
+=======
+const int motorPin_1_array[3] = {7, 6, 9}; //right motor
+int motor1_stat[3] = {0,0,0};
+
+const int motorPin_2_array[3] = {3, 4, 8}; //left motor
+>>>>>>> origin/master
 int motor2_stat[3] = {0,0,0};
 
 const int line_sensor[2] = {A2, A3};
