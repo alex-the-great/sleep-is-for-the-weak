@@ -18,20 +18,10 @@
 #define THRESHOLD 300
 #define SERVO_ANGLE 20
 
-<<<<<<< HEAD
 const int motorPin_1_array[3] = {7,6, 3}; //right motor
-int motor1_stat[3] = {0,0,0};
-
 const int motorPin_2_array[3] = {10,11,9}; //left motor
-=======
-const int motorPin_1_array[3] = {7, 6, 9}; //right motor
-int motor1_stat[3] = {0,0,0};
 
-const int motorPin_2_array[3] = {3, 4, 8}; //left motor
->>>>>>> origin/master
-int motor2_stat[3] = {0,0,0};
-
-const int line_sensor[2] = {A2, A3};
+//const int line_sensor[2] = {A2, A3};
 
 void setup () {
   pinMode( motorPin_1_array[0], OUTPUT );
@@ -49,21 +39,25 @@ void loop () {
   
   driveForward( motorPin_1_array );
   driveForward( motorPin_2_array );
+  Serial.println( "stop1" );
  
   delay( 3000 );
   
   driveStop( motorPin_1_array );
   driveStop( motorPin_2_array );
+  Serial.println( "stop2" );
   
   delay( 1000 );
   
   driveBackward( motorPin_1_array );
   driveBackward( motorPin_2_array );
+  Serial.println( "stop3" );
   
   delay( 3000 );
   
   driveStop( motorPin_1_array );
   driveStop( motorPin_2_array );
+  Serial.println( "stop4" );
   
   delay( 1000 );
   
