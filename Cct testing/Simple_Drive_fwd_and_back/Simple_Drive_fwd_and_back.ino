@@ -18,7 +18,7 @@
 #define THRESHOLD 300
 #define SERVO_ANGLE 20
 
-const int motorPin_1_array[3] = {7,6, 3}; //right motor
+const int motorPin_1_array[3] = {8,9,6}; //right motor
 const int motorPin_2_array[3] = {10,11,9}; //left motor
 
 //const int line_sensor[2] = {A2, A3};
@@ -67,13 +67,13 @@ void loop () {
 void driveForward( const int motorPin_array[] ) {
   digitalWrite( motorPin_array[0], 1 );
   digitalWrite( motorPin_array[1], 0 );
-  analogWrite(motorPin_array[2],255);
+  analogWrite(motorPin_array[2],127);
 }
 
 void driveBackward( const int motorPin_array[] ) {
   digitalWrite( motorPin_array[0], 0 );
   digitalWrite( motorPin_array[1], 1 );
-  analogWrite(motorPin_array[2], 255);
+  analogWrite(motorPin_array[2], 127);
 }
 
 void driveStop( const int motorPin_array[] ) {
